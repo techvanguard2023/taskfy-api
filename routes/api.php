@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TaskController;
 
 Route::prefix('v1')->group(function () {
 
@@ -20,6 +21,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('users/phone/{phone}', [UserController::class, 'findByPhone']);
         Route::apiResource('users', UserController::class);
+        Route::apiResource('tasks', TaskController::class);
     });
 
 });

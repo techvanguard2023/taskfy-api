@@ -3,6 +3,7 @@
 namespace App\Mcp\Tools;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
@@ -21,7 +22,7 @@ class DeleteTaskTool extends Tool
             return Response::text("❌ Erro: O número de telefone (phoneNumber) é obrigatório.");
         }
 
-        $user = \App\Models\User::where('phone', $phoneNumber)->first();
+        $user = User::where('phone', $phoneNumber)->first();
 
         if (!$user) {
             return Response::text("❌ Erro: Usuário com o telefone {$phoneNumber} não encontrado.");
@@ -36,7 +37,13 @@ class DeleteTaskTool extends Tool
         $title = $task->title;
         $task->delete();
 
-        return Response::text("🗑️ Tarefa '{$title}' de {$user->name} deletada com sucesso.");
+        $message = "🗑️ Tarefa '{$title}' de {$user->name} deletada com sucesso.";
+        
+        if ($task->children()->count() > 0) {
+            $message .= " Suas sub-tarefas também foram removidas.";
+        }
+
+        return Response::text($message);
     }
 
     public function schema(JsonSchema $schema): array

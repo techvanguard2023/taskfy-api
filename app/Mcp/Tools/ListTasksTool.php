@@ -3,6 +3,7 @@
 namespace App\Mcp\Tools;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
@@ -20,7 +21,7 @@ class ListTasksTool extends Tool
             return Response::text("❌ Erro: O número de telefone (phoneNumber) é obrigatório.");
         }
 
-        $user = \App\Models\User::where('phone', $phoneNumber)->first();
+        $user = User::where('phone', $phoneNumber)->first();
 
         if (!$user) {
             return Response::text("❌ Erro: Usuário com o telefone {$phoneNumber} não encontrado.");
@@ -33,13 +34,24 @@ class ListTasksTool extends Tool
             $query->where('completed', $status === 'completed');
         }
 
-        $tasks = $query->orderBy('created_at', 'desc')->get();
+        $parentId = $request->get('parent_id');
+        if ($parentId) {
+            $query->where('parent_id', $parentId);
+        } else {
+            $query->whereNull('parent_id');
+        }
+
+        $tasks = $query->with('children')->orderBy('created_at', 'desc')->get();
 
         $output = "📋 **Tarefas de {$user->name}** ({$tasks->count()} total):\n\n";
         foreach ($tasks as $task) {
             $statusEmoji = $task->completed ? '✅' : '⏳';
             $output .= "- {$statusEmoji} [ID: {$task->id}] **{$task->title}** ({$task->priority})\n";
             if ($task->description) $output .= "  {$task->description}\n";
+            
+            if (!$parentId && $task->children->count() > 0) {
+                $output .= "  ↳ 📋 Possui {$task->children->count()} sub-tarefas/itens.\n";
+            }
             $output .= "\n";
         }
 
@@ -55,6 +67,8 @@ class ListTasksTool extends Tool
             'status' => $schema->string()
                 ->enum(['completed', 'pending'])
                 ->description('Filtrar por status (opcional: lista todas se omitido)'),
+            'parent_id' => $schema->integer()
+                ->description('Filtrar pelos itens de uma lista específica pelo ID do pai (opcional)'),
         ];
     }
 }

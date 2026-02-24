@@ -3,6 +3,7 @@
 namespace App\Mcp\Tools;
 
 use App\Models\Task;
+use App\Models\User;
 use Laravel\Mcp\Server\Tool;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
@@ -19,7 +20,7 @@ class CreateTaskTool extends Tool {
             return Response::text("❌ Erro: O número de telefone (phoneNumber) é obrigatório.");
         }
 
-        $user = \App\Models\User::where('phone', $phoneNumber)->first();
+        $user = User::where('phone', $phoneNumber)->first();
 
         if (!$user) {
             return Response::text("❌ Erro: Usuário com o telefone {$phoneNumber} não encontrado.");
@@ -30,6 +31,7 @@ class CreateTaskTool extends Tool {
             'title' => $request->get('title'),
             'description' => $request->get('description'),
             'priority' => $request->get('priority', 'medium'),
+            'parent_id' => $request->get('parent_id'),
         ]);
         
         return Response::text("✅ Tarefa criada para {$user->name}! ID: {$task->id} - {$task->title}");
@@ -51,6 +53,8 @@ class CreateTaskTool extends Tool {
                 ->enum(['low', 'medium', 'high'])
                 ->default('medium')
                 ->description('Prioridade da tarefa'),
+            'parent_id' => $schema->integer()
+                ->description('ID da tarefa pai (opcional, para criar uma sub-tarefa/item de lista)'),
         ];
     }
 

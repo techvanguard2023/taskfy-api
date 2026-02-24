@@ -17,7 +17,23 @@ class Task extends Model
         'priority',
         'completed',
         'completed_at',
+        'parent_id',
     ];
+
+    public function parent()
+    {
+        return $this->belongsTo(Task::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Task::class, 'parent_id');
+    }
+
+    public function items()
+    {
+        return $this->children();
+    }
 
     public function scopeForUser($query, $userId)
     {

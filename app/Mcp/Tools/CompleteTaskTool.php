@@ -3,6 +3,7 @@
 namespace App\Mcp\Tools;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
@@ -21,7 +22,7 @@ class CompleteTaskTool extends Tool
             return Response::text("❌ Erro: O número de telefone (phoneNumber) é obrigatório.");
         }
 
-        $user = \App\Models\User::where('phone', $phoneNumber)->first();
+        $user = User::where('phone', $phoneNumber)->first();
 
         if (!$user) {
             return Response::text("❌ Erro: Usuário com o telefone {$phoneNumber} não encontrado.");
@@ -42,7 +43,13 @@ class CompleteTaskTool extends Tool
             'completed_at' => now(),
         ]);
 
-        return Response::text("✅ Tarefa '{$task->title}' de {$user->name} marcada como concluída em " . now()->format('d/m/Y H:i'));
+        $message = "✅ Tarefa '{$task->title}' de {$user->name} marcada como concluída!";
+        
+        if ($task->children()->count() > 0) {
+            $message .= " Suas sub-tarefas também foram concluídas.";
+        }
+
+        return Response::text($message);
     }
 
     public function schema(JsonSchema $schema): array

@@ -21,16 +21,19 @@ class CreateTaskTool extends Tool {
         return Response::text("✅ Tarefa criada! ID: {$task->id} - {$task->title}");
     }
 
-    public function schema(JsonSchema $schema): array {
-        return [ // <- CORRIGIDO: array com objetos Type fluentes
+    public function schema(JsonSchema $schema): array
+    {
+        return [
             'title' => $schema->string()
                 ->required()
                 ->description('Título da tarefa'),
             'description' => $schema->string()
                 ->description('Descrição opcional'),
-            'priority' => $schema->enum(['low', 'medium', 'high'])
+            'priority' => $schema->string()  // <- string() PRIMEIRO
+                ->enum(['low', 'medium', 'high'])  // <- enum() NO TYPE
                 ->default('medium')
                 ->description('Prioridade da tarefa'),
         ];
     }
+
 }

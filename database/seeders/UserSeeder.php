@@ -19,5 +19,26 @@ class UserSeeder extends Seeder
             'phone' => '+5521981321890',
             'password' => 'Rm@150917'
         ]);
+
+        User::create([
+            'name' => 'Usuário 2',
+            'email' => 'usuario2@gmail.com',
+            'phone' => '+5521999999999',
+            'password' => 'Rm@150917'
+        ]);
+
+        User::create([
+            'name' => 'Usuário 3',
+            'email' => 'usuario3@gmail.com',
+            'phone' => '+5521988888888',
+            'password' => 'Rm@150917'
+        ]);
+
+        User::create([
+            'name' => 'Usuário 4',
+            'email' => 'usuario4@gmail.com',
+            'phone' => '+5521977777777',
+            'password' => 'Rm@150917'
+        ]);
     }
 }

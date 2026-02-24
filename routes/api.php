@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 Route::prefix('v1')->group(function () {
 
@@ -17,6 +18,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/me', [AuthController::class, 'me']);
 
+        Route::get('users/phone/{phone}', [UserController::class, 'findByPhone']);
+        Route::apiResource('users', UserController::class);
     });
 
 });

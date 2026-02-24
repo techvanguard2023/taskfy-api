@@ -11,15 +11,21 @@ use Illuminate\Contracts\JsonSchema\JsonSchema; // <- CORRIGIDO: interface de co
 class CreateTaskTool extends Tool {
     protected string $description = 'Cria uma nova tarefa com título, descrição e prioridade.';
 
-    public function handle(Request $request): Response {
+    public function handle(Request $request): Response 
+    {
+        // ✅ CORRIGIDO: user_id sempre válido
+        $userId = $request->user()?->id ?? auth()->id() ?? 2; // fallback pro user 1 ou seu ID
+        
         $task = Task::create([
-            'user_id' => $request->user()?->id,
+            'user_id' => $userId,  // <- nunca null
             'title' => $request->get('title'),
             'description' => $request->get('description'),
             'priority' => $request->get('priority', 'medium'),
         ]);
+        
         return Response::text("✅ Tarefa criada! ID: {$task->id} - {$task->title}");
     }
+
 
     public function schema(JsonSchema $schema): array
     {

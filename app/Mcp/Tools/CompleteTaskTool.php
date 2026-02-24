@@ -33,7 +33,9 @@ class CompleteTaskTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            'task_id' => $schema->integer()->required()->description('ID da tarefa'),
+            'task_id' => $schema->integer()
+                ->required()
+                ->description('ID da tarefa'),
         ];
     }
 }

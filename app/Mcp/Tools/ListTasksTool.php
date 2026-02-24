@@ -19,7 +19,7 @@ class ListTasksTool extends Tool
 
         $status = $request->get('status');
         if ($status) {
-            $query->where('completed', $status === 'completed');
+            $query->where('completed', $status === 'completed'); // <- LÓGICA PERFEITA
         }
 
         $tasks = $query->orderBy('created_at', 'desc')->get();
@@ -38,7 +38,9 @@ class ListTasksTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            'status' => $schema->string()->enum(['completed', 'pending'])->description('Filtrar por status'),
+            'status' => $schema->string()
+                ->enum(['completed', 'pending'])
+                ->description('Filtrar por status (opcional: lista todas se omitido)'),
         ];
     }
 }

@@ -14,20 +14,31 @@ class ListTasksTool extends Tool
 
     public function handle(Request $request): Response
     {
-        $userId = $request->user()?->id;
-        $query = Task::forUser($userId ?? 0);
+        $phoneNumber = $request->get('phoneNumber');
+
+        if (!$phoneNumber) {
+            return Response::text("❌ Erro: O número de telefone (phoneNumber) é obrigatório.");
+        }
+
+        $user = \App\Models\User::where('phone', $phoneNumber)->first();
+
+        if (!$user) {
+            return Response::text("❌ Erro: Usuário com o telefone {$phoneNumber} não encontrado.");
+        }
+
+        $query = Task::forUser($user->id);
 
         $status = $request->get('status');
         if ($status) {
-            $query->where('completed', $status === 'completed'); // <- LÓGICA PERFEITA
+            $query->where('completed', $status === 'completed');
         }
 
         $tasks = $query->orderBy('created_at', 'desc')->get();
 
-        $output = "📋 **Suas tarefas** ({$tasks->count()} total):\n\n";
+        $output = "📋 **Tarefas de {$user->name}** ({$tasks->count()} total):\n\n";
         foreach ($tasks as $task) {
             $statusEmoji = $task->completed ? '✅' : '⏳';
-            $output .= "- {$statusEmoji} **{$task->title}** ({$task->priority})\n";
+            $output .= "- {$statusEmoji} [ID: {$task->id}] **{$task->title}** ({$task->priority})\n";
             if ($task->description) $output .= "  {$task->description}\n";
             $output .= "\n";
         }
@@ -38,6 +49,9 @@ class ListTasksTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
+            'phoneNumber' => $schema->string()
+                ->required()
+                ->description('O número de telefone do usuário (ex: +5521981321890)'),
             'status' => $schema->string()
                 ->enum(['completed', 'pending'])
                 ->description('Filtrar por status (opcional: lista todas se omitido)'),

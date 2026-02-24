@@ -13,6 +13,14 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+
+        User::create([
+            'name' => 'Admin Bot',
+            'email' => 'adminbot@taskfy.com.br',
+            'phone' => '+5521989119661',
+            'password' => 'Rm@150917'
+        ]);
+
         User::create([
             'name' => 'Robson Pedreira',
             'email' => 'masterdba6@gmail.com',

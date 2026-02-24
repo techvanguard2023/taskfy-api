@@ -13,30 +13,42 @@ class CreateTaskTool extends Tool {
 
     public function handle(Request $request): Response 
     {
-        // ✅ CORRIGIDO: user_id sempre válido
-        $userId = $request->user()?->id ?? auth()->id() ?? 2; // fallback pro user 1 ou seu ID
+        $phoneNumber = $request->get('phoneNumber');
+
+        if (!$phoneNumber) {
+            return Response::text("❌ Erro: O número de telefone (phoneNumber) é obrigatório.");
+        }
+
+        $user = \App\Models\User::where('phone', $phoneNumber)->first();
+
+        if (!$user) {
+            return Response::text("❌ Erro: Usuário com o telefone {$phoneNumber} não encontrado.");
+        }
         
         $task = Task::create([
-            'user_id' => $userId,  // <- nunca null
+            'user_id' => $user->id,
             'title' => $request->get('title'),
             'description' => $request->get('description'),
             'priority' => $request->get('priority', 'medium'),
         ]);
         
-        return Response::text("✅ Tarefa criada! ID: {$task->id} - {$task->title}");
+        return Response::text("✅ Tarefa criada para {$user->name}! ID: {$task->id} - {$task->title}");
     }
 
 
     public function schema(JsonSchema $schema): array
     {
         return [
+            'phoneNumber' => $schema->string()
+                ->required()
+                ->description('O número de telefone do usuário (ex: +5521981321890)'),
             'title' => $schema->string()
                 ->required()
                 ->description('Título da tarefa'),
             'description' => $schema->string()
                 ->description('Descrição opcional'),
-            'priority' => $schema->string()  // <- string() PRIMEIRO
-                ->enum(['low', 'medium', 'high'])  // <- enum() NO TYPE
+            'priority' => $schema->string()
+                ->enum(['low', 'medium', 'high'])
                 ->default('medium')
                 ->description('Prioridade da tarefa'),
         ];

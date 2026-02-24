@@ -16,6 +16,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Robson Pedreira',
             'email' => 'masterdba6@gmail.com',
+            'phone' => '+5521981321890',
             'password' => 'Rm@150917'
         ]);
     }

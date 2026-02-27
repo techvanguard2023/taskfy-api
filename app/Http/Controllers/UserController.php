@@ -17,6 +17,11 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
+
+        if ($users->isEmpty()) {
+            return response()->json(['message' => 'Nenhum usuário encontrado.'], 404);
+        }
+
         return response()->json($users);
     }
 

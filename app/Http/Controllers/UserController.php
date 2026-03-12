@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -41,9 +42,12 @@ class UserController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        $slug = Str::slug($request->name);
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'slug' => $slug,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
@@ -89,7 +93,7 @@ class UserController extends Controller
         }
 
         $data = $request->only(['name', 'email', 'phone']);
-        
+
         if ($request->has('password')) {
             $data['password'] = Hash::make($request->password);
         }

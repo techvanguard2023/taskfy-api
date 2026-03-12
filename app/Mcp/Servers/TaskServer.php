@@ -7,6 +7,7 @@ use App\Mcp\Tools\CreateTaskTool;
 use App\Mcp\Tools\ListTasksTool;
 use App\Mcp\Tools\CompleteTaskTool;
 use App\Mcp\Tools\DeleteTaskTool;
+use App\Mcp\Tools\ListSubTasksTool;
 use App\Mcp\Tools\UpdateTaskTool;
 
 class TaskServer extends Server
@@ -20,6 +21,7 @@ class TaskServer extends Server
     public array $tools = [
         CreateTaskTool::class,
         ListTasksTool::class,
+        ListSubTasksTool::class,
         CompleteTaskTool::class,
         DeleteTaskTool::class,
         UpdateTaskTool::class,

@@ -18,7 +18,8 @@ class TaskController extends Controller
 
         if ($request->has('parent_id')) {
             $query->where('parent_id', $request->parent_id);
-        } else {
+        }
+        else {
             $query->whereNull('parent_id');
         }
 
@@ -37,6 +38,7 @@ class TaskController extends Controller
             'priority' => 'nullable|in:low,medium,high',
             'completed' => 'nullable|boolean',
             'parent_id' => 'nullable|exists:tasks,id',
+            'source' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -58,6 +60,7 @@ class TaskController extends Controller
             'completed' => $request->completed ?? false,
             'completed_at' => ($request->completed ?? false) ? now() : null,
             'parent_id' => $request->parent_id,
+            'source' => $request->source,
         ]);
 
         return response()->json($task, 201);
@@ -85,6 +88,7 @@ class TaskController extends Controller
             'priority' => 'sometimes|required|in:low,medium,high',
             'completed' => 'sometimes|required|boolean',
             'parent_id' => 'nullable|exists:tasks,id',
+            'source' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {

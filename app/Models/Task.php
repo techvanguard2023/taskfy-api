@@ -18,6 +18,7 @@ class Task extends Model
         'completed',
         'completed_at',
         'parent_id',
+        'source',
     ];
 
     public function parent()

@@ -37,7 +37,8 @@ class ListTasksTool extends Tool
         $parentId = $request->get('parent_id');
         if ($parentId) {
             $query->where('parent_id', $parentId);
-        } else {
+        }
+        else {
             $query->whereNull('parent_id');
         }
 
@@ -47,8 +48,9 @@ class ListTasksTool extends Tool
         foreach ($tasks as $task) {
             $statusEmoji = $task->completed ? '✅' : '⏳';
             $output .= "- {$statusEmoji} [ID: {$task->id}] **{$task->title}** ({$task->priority})\n";
-            if ($task->description) $output .= "  {$task->description}\n";
-            
+            if ($task->description)
+                $output .= "  {$task->description}\n";
+
             if (!$parentId && $task->children->count() > 0) {
                 $output .= "  ↳ 📋 Possui {$task->children->count()} sub-tarefas/itens.\n";
             }
@@ -62,13 +64,19 @@ class ListTasksTool extends Tool
     {
         return [
             'phoneNumber' => $schema->string()
-                ->required()
-                ->description('O número de telefone do usuário (ex: +5521981321890)'),
+            ->required()
+            ->description('O número de telefone do usuário (ex: +5521981321890)'),
             'status' => $schema->string()
-                ->enum(['completed', 'pending'])
-                ->description('Filtrar por status (opcional: lista todas se omitido)'),
+            ->enum(['completed', 'pending'])
+            ->description('Filtrar por status (opcional: lista todas se omitido)'),
             'parent_id' => $schema->integer()
-                ->description('Filtrar pelos itens de uma lista específica pelo ID do pai (opcional)'),
+            ->description('Filtrar pelos itens de uma lista específica pelo ID do pai (opcional)'),
+            'source' => $schema->string()
+            ->description('Filtrar por fonte (opcional)'),
+            'created_at' => $schema->string()
+            ->description('Filtrar por data de criação (opcional)'),
+            'updated_at' => $schema->string()
+            ->description('Filtrar por data de atualização (opcional)'),
         ];
     }
 }

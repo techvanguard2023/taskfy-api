@@ -39,10 +39,16 @@ class UpdateTaskTool extends Tool
         }
 
         $updates = [];
-        if ($request->has('title')) $updates['title'] = $request->get('title');
-        if ($request->has('description')) $updates['description'] = $request->get('description');
-        if ($request->has('priority')) $updates['priority'] = $request->get('priority');
-        if ($request->has('parent_id')) $updates['parent_id'] = $request->get('parent_id');
+        if ($request->has('title'))
+            $updates['title'] = $request->get('title');
+        if ($request->has('description'))
+            $updates['description'] = $request->get('description');
+        if ($request->has('priority'))
+            $updates['priority'] = $request->get('priority');
+        if ($request->has('parent_id'))
+            $updates['parent_id'] = $request->get('parent_id');
+        if ($request->has('source'))
+            $updates['source'] = $request->get('source');
 
         if (empty($updates)) {
             return Response::text("⚠️ Nenhuma alteração fornecida para a tarefa '{$task->title}'.");
@@ -57,20 +63,26 @@ class UpdateTaskTool extends Tool
     {
         return [
             'phoneNumber' => $schema->string()
-                ->required()
-                ->description('O número de telefone do usuário (ex: +5521981321890)'),
+            ->required()
+            ->description('O número de telefone do usuário (ex: +5521981321890)'),
             'task_id' => $schema->integer()
-                ->required()
-                ->description('ID da tarefa a ser atualizada'),
+            ->required()
+            ->description('ID da tarefa a ser atualizada'),
             'title' => $schema->string()
-                ->description('Novo título da tarefa (opcional)'),
+            ->description('Novo título da tarefa (opcional)'),
             'description' => $schema->string()
-                ->description('Nova descrição (opcional)'),
+            ->description('Nova descrição (opcional)'),
             'priority' => $schema->string()
-                ->enum(['low', 'medium', 'high'])
-                ->description('Nova prioridade (opcional)'),
+            ->enum(['low', 'medium', 'high'])
+            ->description('Nova prioridade (opcional)'),
             'parent_id' => $schema->integer()
-                ->description('ID da tarefa pai para converter em sub-tarefa ou mudar de pai (opcional)'),
+            ->description('ID da tarefa pai para converter em sub-tarefa ou mudar de pai (opcional)'),
+            'source' => $schema->string()
+            ->description('Filtrar por fonte (opcional)'),
+            'created_at' => $schema->string()
+            ->description('Filtrar por data de criação (opcional)'),
+            'updated_at' => $schema->string()
+            ->description('Filtrar por data de atualização (opcional)'),
         ];
     }
 }

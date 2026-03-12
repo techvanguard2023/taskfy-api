@@ -9,10 +9,11 @@ use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
 use Illuminate\Contracts\JsonSchema\JsonSchema; // <- CORRIGIDO: interface de contrato
 
-class CreateTaskTool extends Tool {
+class CreateTaskTool extends Tool
+{
     protected string $description = 'Cria uma nova tarefa com título, descrição e prioridade.';
 
-    public function handle(Request $request): Response 
+    public function handle(Request $request): Response
     {
         $phoneNumber = $request->get('phoneNumber');
 
@@ -25,15 +26,16 @@ class CreateTaskTool extends Tool {
         if (!$user) {
             return Response::text("❌ Erro: Usuário com o telefone {$phoneNumber} não encontrado.");
         }
-        
+
         $task = Task::create([
             'user_id' => $user->id,
             'title' => $request->get('title'),
             'description' => $request->get('description'),
             'priority' => $request->get('priority', 'medium'),
             'parent_id' => $request->get('parent_id'),
+            'source' => $request->get('source', 'WhatsApp'),
         ]);
-        
+
         return Response::text("✅ Tarefa criada para {$user->name}! ID: {$task->id} - {$task->title}");
     }
 
@@ -42,19 +44,21 @@ class CreateTaskTool extends Tool {
     {
         return [
             'phoneNumber' => $schema->string()
-                ->required()
-                ->description('O número de telefone do usuário (ex: +5521981321890)'),
+            ->required()
+            ->description('O número de telefone do usuário (ex: +5521981321890)'),
             'title' => $schema->string()
-                ->required()
-                ->description('Título da tarefa'),
+            ->required()
+            ->description('Título da tarefa'),
             'description' => $schema->string()
-                ->description('Descrição opcional'),
+            ->description('Descrição opcional'),
             'priority' => $schema->string()
-                ->enum(['low', 'medium', 'high'])
-                ->default('medium')
-                ->description('Prioridade da tarefa'),
+            ->enum(['low', 'medium', 'high'])
+            ->default('medium')
+            ->description('Prioridade da tarefa'),
             'parent_id' => $schema->integer()
-                ->description('ID da tarefa pai (opcional, para criar uma sub-tarefa/item de lista)'),
+            ->description('ID da tarefa pai (opcional, para criar uma sub-tarefa/item de lista)'),
+            'source' => $schema->string()
+            ->description('Fonte da tarefa'),
         ];
     }
 

@@ -44,7 +44,7 @@ class CompleteTaskTool extends Tool
         ]);
 
         $message = "✅ Tarefa '{$task->title}' de {$user->name} marcada como concluída!";
-        
+
         if ($task->children()->count() > 0) {
             $message .= " Suas sub-tarefas também foram concluídas.";
         }
@@ -56,11 +56,17 @@ class CompleteTaskTool extends Tool
     {
         return [
             'phoneNumber' => $schema->string()
-                ->required()
-                ->description('O número de telefone do usuário (ex: +5521981321890)'),
+            ->required()
+            ->description('O número de telefone do usuário (ex: +5521981321890)'),
             'task_id' => $schema->integer()
-                ->required()
-                ->description('ID da tarefa'),
+            ->required()
+            ->description('ID da tarefa'),
+            'source' => $schema->string()
+            ->description('Filtrar por fonte (opcional)'),
+            'created_at' => $schema->string()
+            ->description('Filtrar por data de criação (opcional)'),
+            'updated_at' => $schema->string()
+            ->description('Filtrar por data de atualização (opcional)'),
         ];
     }
 }

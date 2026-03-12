@@ -55,8 +55,9 @@ class ListSubTasksTool extends Tool
         foreach ($tasks as $task) {
             $statusEmoji = $task->completed ? '✅' : '⏳';
             $output .= "- {$statusEmoji} [ID: {$task->id}] **{$task->title}** ({$task->priority})\n";
-            if ($task->description) $output .= "  {$task->description}\n";
-            
+            if ($task->description)
+                $output .= "  {$task->description}\n";
+
             if ($task->children->count() > 0) {
                 $output .= "  ↳ 📋 Possui {$task->children->count()} sub-tarefas/itens de nível inferior.\n";
             }
@@ -70,14 +71,20 @@ class ListSubTasksTool extends Tool
     {
         return [
             'phoneNumber' => $schema->string()
-                ->required()
-                ->description('O número de telefone do usuário (ex: +5521981321890)'),
+            ->required()
+            ->description('O número de telefone do usuário (ex: +5521981321890)'),
             'taskId' => $schema->integer()
-                ->required()
-                ->description('ID da tarefa principal para listar as sub-tarefas associadas'),
+            ->required()
+            ->description('ID da tarefa principal para listar as sub-tarefas associadas'),
             'status' => $schema->string()
-                ->enum(['completed', 'pending'])
-                ->description('Filtrar por status (opcional: lista todas se omitido)'),
+            ->enum(['completed', 'pending'])
+            ->description('Filtrar por status (opcional: lista todas se omitido)'),
+            'source' => $schema->string()
+            ->description('Filtrar por fonte (opcional)'),
+            'created_at' => $schema->string()
+            ->description('Filtrar por data de criação (opcional)'),
+            'updated_at' => $schema->string()
+            ->description('Filtrar por data de atualização (opcional)'),
         ];
     }
 }

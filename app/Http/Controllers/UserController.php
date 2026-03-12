@@ -42,7 +42,14 @@ class UserController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        // Gera slug único diretamente da request
         $slug = Str::slug($request->name);
+        $originalSlug = $slug;
+        $count = 1;
+        while (User::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $count;
+            $count++;
+        }
 
         $user = User::create([
             'name' => $request->name,

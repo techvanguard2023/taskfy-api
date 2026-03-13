@@ -14,6 +14,7 @@ class WpSetting extends Model
         'instance_id',
         'instance_name',
         'webhook_url',
+        'status',
     ];
 
     public function user()

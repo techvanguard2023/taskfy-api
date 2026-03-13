@@ -25,9 +25,10 @@ class WpSettingController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'instance_id'   => 'required|string|max:255|unique:wp_settings,instance_id',
+            'instance_id' => 'required|string|max:255|unique:wp_settings,instance_id',
             'instance_name' => 'required|string|max:255|unique:wp_settings,instance_name',
-            'webhook_url'   => 'required|url|max:255',
+            'webhook_url' => 'required|url|max:255',
+            'status' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -35,10 +36,11 @@ class WpSettingController extends Controller
         }
 
         $setting = WpSetting::create([
-            'user_id'       => Auth::id(),
-            'instance_id'   => $request->instance_id,
+            'user_id' => Auth::id(),
+            'instance_id' => $request->instance_id,
             'instance_name' => $request->instance_name,
-            'webhook_url'   => $request->webhook_url,
+            'webhook_url' => $request->webhook_url,
+            'status' => $request->status,
         ]);
 
         return response()->json($setting, 201);
@@ -62,9 +64,10 @@ class WpSettingController extends Controller
         $this->authorizeOwnership($wpSetting);
 
         $validator = Validator::make($request->all(), [
-            'instance_id'   => 'sometimes|required|string|max:255|unique:wp_settings,instance_id,' . $wpSetting->id,
+            'instance_id' => 'sometimes|required|string|max:255|unique:wp_settings,instance_id,' . $wpSetting->id,
             'instance_name' => 'sometimes|required|string|max:255|unique:wp_settings,instance_name,' . $wpSetting->id,
-            'webhook_url'   => 'sometimes|required|url|max:255',
+            'webhook_url' => 'sometimes|required|url|max:255',
+            'status' => 'sometimes|required|string|max:255',
         ]);
 
         if ($validator->fails()) {

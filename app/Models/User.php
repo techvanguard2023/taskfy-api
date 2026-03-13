@@ -26,6 +26,7 @@ class User extends Authenticatable
         'slug',
         'phone',
         'password',
+        'role',
     ];
 
     /**
@@ -54,5 +55,10 @@ class User extends Authenticatable
     public function wpSettings()
     {
         return $this->hasMany(WpSetting::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 }

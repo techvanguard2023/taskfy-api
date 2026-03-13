@@ -18,35 +18,9 @@ class UserSeeder extends Seeder
             'name' => 'Admin Bot',
             'email' => 'adminbot@taskfy.com.br',
             'phone' => '+5521989119661',
-            'password' => 'Rm@150917'
+            'password' => 'Rm@150917',
+            'role' => 'admin'
         ]);
 
-        User::create([
-            'name' => 'Robson Pedreira',
-            'email' => 'masterdba6@gmail.com',
-            'phone' => '+5521981321890',
-            'password' => 'Rm@150917'
-        ]);
-
-        User::create([
-            'name' => 'Usuário 2',
-            'email' => 'usuario2@gmail.com',
-            'phone' => '+5521999999999',
-            'password' => 'Rm@150917'
-        ]);
-
-        User::create([
-            'name' => 'Usuário 3',
-            'email' => 'usuario3@gmail.com',
-            'phone' => '+5521988888888',
-            'password' => 'Rm@150917'
-        ]);
-
-        User::create([
-            'name' => 'Usuário 4',
-            'email' => 'usuario4@gmail.com',
-            'phone' => '+5521977777777',
-            'password' => 'Rm@150917'
-        ]);
     }
 }

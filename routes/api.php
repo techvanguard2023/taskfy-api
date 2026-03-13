@@ -21,16 +21,12 @@ Route::prefix('v1')->group(function () {
             Route::post('/logout', [AuthController::class , 'logout']);
             Route::get('/me', [AuthController::class , 'me']);
 
-            Route::middleware('role:admin')->group(function () {
-                    Route::get('users/phone/{phone}', [UserController::class , 'findByPhone']);
-                    Route::apiResource('users', UserController::class);
-                }
-                );
+            Route::get('users/phone/{phone}', [UserController::class , 'findByPhone']);
+            Route::apiResource('users', UserController::class);
 
-                Route::apiResource('tasks', TaskController::class);
-                Route::delete('wp-settings/name/{name}', [WpSettingController::class , 'destroyByName']);
-                Route::patch('wp-settings/name/{name}', [WpSettingController::class , 'updateByName']);
-                Route::apiResource('wp-settings', WpSettingController::class);
-            }
-            );
+            Route::apiResource('tasks', TaskController::class);
+            Route::delete('wp-settings/name/{name}', [WpSettingController::class , 'destroyByName']);
+            Route::patch('wp-settings/name/{name}', [WpSettingController::class , 'updateByName']);
+            Route::apiResource('wp-settings', WpSettingController::class);
+        });
         });

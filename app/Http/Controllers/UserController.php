@@ -15,9 +15,16 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $user = $request->user();
+
+        if ($user->role === 'admin') {
+            $users = User::all();
+        }
+        else {
+            $users = collect([$user]);
+        }
 
         if ($users->isEmpty()) {
             return response()->json(['message' => 'Nenhum usuário encontrado.'], 404);

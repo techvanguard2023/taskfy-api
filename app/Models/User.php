@@ -57,8 +57,9 @@ class User extends Authenticatable
         return $this->hasMany(WpSetting::class);
     }
 
-    public function isAdmin(): bool
+
+    public function tasks()
     {
-        return $this->role === 'admin';
+        return $this->hasMany(Task::class);
     }
 }

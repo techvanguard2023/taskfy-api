@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('instance_name')->unique();
             $table->string('webhook_url');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

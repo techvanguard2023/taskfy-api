@@ -23,6 +23,7 @@ Route::prefix('v1')->group(function () {
         Route::get('users/phone/{phone}', [UserController::class, 'findByPhone']);
         Route::apiResource('users', UserController::class);
         Route::apiResource('tasks', TaskController::class);
+        Route::delete('wp-settings/name/{name}', [WpSettingController::class, 'destroyByName']);
         Route::apiResource('wp-settings', WpSettingController::class);
     });
 

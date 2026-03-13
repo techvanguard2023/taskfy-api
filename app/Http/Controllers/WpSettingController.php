@@ -91,6 +91,20 @@ class WpSettingController extends Controller
     }
 
     /**
+     * Remove the specified WP setting from storage by instance name.
+     */
+    public function destroyByName(string $name)
+    {
+        $wpSetting = WpSetting::where('user_id', Auth::id())
+            ->where('instance_name', $name)
+            ->firstOrFail();
+
+        $wpSetting->delete();
+
+        return response()->json(['message' => 'Configuração WhatsApp removida com sucesso.']);
+    }
+
+    /**
      * Authorize that the authenticated user owns the WP setting.
      */
     protected function authorizeOwnership(WpSetting $wpSetting): void

@@ -91,6 +91,31 @@ class WpSettingController extends Controller
     }
 
     /**
+     * Update the specified WP setting in storage by instance name.
+     */
+    public function updateByName(Request $request, string $name)
+    {
+        $wpSetting = WpSetting::where('user_id', Auth::id())
+            ->where('instance_name', $name)
+            ->firstOrFail();
+
+        $validator = Validator::make($request->all(), [
+            'instance_id'   => 'sometimes|required|string|max:255|unique:wp_settings,instance_id,' . $wpSetting->id,
+            'instance_name' => 'sometimes|required|string|max:255|unique:wp_settings,instance_name,' . $wpSetting->id,
+            'webhook_url'   => 'sometimes|required|url|max:255',
+            'status'        => 'sometimes|required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $wpSetting->update($request->only(['instance_id', 'instance_name', 'webhook_url', 'status']));
+
+        return response()->json($wpSetting);
+    }
+
+    /**
      * Remove the specified WP setting from storage by instance name.
      */
     public function destroyByName(string $name)

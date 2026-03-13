@@ -24,6 +24,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('users', UserController::class);
         Route::apiResource('tasks', TaskController::class);
         Route::delete('wp-settings/name/{name}', [WpSettingController::class, 'destroyByName']);
+        Route::patch('wp-settings/name/{name}', [WpSettingController::class, 'updateByName']);
         Route::apiResource('wp-settings', WpSettingController::class);
     });
 

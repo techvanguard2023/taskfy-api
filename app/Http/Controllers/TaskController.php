@@ -14,7 +14,8 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Task::forUser(Auth::id());
+        $query = Task::forUser(Auth::id())
+            ->where('completed', false);
 
         if ($request->has('parent_id')) {
             $query->where('parent_id', $request->parent_id);
